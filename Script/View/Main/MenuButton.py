@@ -1,10 +1,11 @@
 import tkinter as tk
+import asyncio
 
 #メニューのボタンを作成
 class MenuButton(tk.Button):
-    def __init__(self, parent=None, text=None, shortcutKey=None, shortcutKeyType=None):
+    def __init__(self, controller=None, parent=None, text=None, shortcutKey=None, shortcutKeyType=None):
         super().__init__(parent, relief=tk.FLAT, anchor=tk.W)
-
+        self.controller = controller
         self.parent = parent
         self.text = text
         self.shortcutKeyType = shortcutKeyType
@@ -41,4 +42,4 @@ class MenuButton(tk.Button):
 
     #ボタンを押したときのイベント
     def on_click_button(self, event=None):
-        self.parent.on_click_menu_button(self.shortcutKeyType)
+        self.controller.on_click_menu_button(self.shortcutKeyType)

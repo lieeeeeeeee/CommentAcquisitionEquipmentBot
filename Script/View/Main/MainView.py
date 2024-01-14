@@ -58,10 +58,6 @@ class MainView(tk.Tk):
     def on_click_menu_bar_button(self, button):
         self.controller.on_click_menu_bar_button(button)
 
-    #メニューボタンを押したときのイベント
-    def on_click_menu_button(self, content):
-        self.controller.on_click_menu_button(content)
-
     #フルスクリーンの切り替え
     def toggle_fullscreen(self):
         self.attributes('-fullscreen', not self.attributes('-fullscreen'))
@@ -77,7 +73,7 @@ class MainView(tk.Tk):
     #メニューを表示
     def show_menu(self, button):
         menuContents = self.menuBarContents[button.text]
-        menu = Menu.Menu(self, menuContents)
+        menu = Menu.Menu(self.controller, self, menuContents)
 
         #仕切り線の幅
         separatorWidth = 2

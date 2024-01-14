@@ -2,11 +2,17 @@ from Script.Model import MainModel
 from Script.View.Main import MainView
 from Script.API import TwitchAPI
 from Script import SettingsController
+import threading
+import asyncio
+import nest_asyncio
 
 
 #メインウィンドウのコントローラー
 class MainController:
     def __init__(self):
+        # nest_asyncioを適用
+        nest_asyncio.apply()
+
         #設定ウィンドウコントローラーを作成
         self.settingsController = SettingsController.SettingsController(self)
 
@@ -112,7 +118,10 @@ class MainController:
         self.bot = TwitchAPI.Bot(self, channelName)
         try:
             #ボットを起動
-            self.bot.run()
+            #スレッドを作成
+            runThread = threading.Thread(target=self.bot.run, daemon=True) 
+            #スレッドを起動
+            runThread.start()            
         except Exception as e:
             self.show_error_message(f"エラーが発生しました: {e}")
             #ボットを削除
@@ -121,13 +130,18 @@ class MainController:
 
     #チャンネルから離脱
     def leave_channel(self):
-        #ボットが存在しないとき
+        #self.botがnullのとき
         if not hasattr(self, 'bot'):
-            self.show_error_message("接続しているチャンネルがありません")
+            self.show_error_message("接続していません")
             return
 
+        #ループを作成
+        loop = asyncio.get_event_loop()
         #ボットを停止
-        self.bot.stop()
+        loop.run_until_complete(self.bot.stop())
+        #ループを停止
+        loop.close()
+        
         #ボットを削除
         del self.bot
 

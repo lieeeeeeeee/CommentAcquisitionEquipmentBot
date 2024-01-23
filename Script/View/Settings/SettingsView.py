@@ -1,4 +1,4 @@
-from Script.View.Settings import PathSettingFrame
+from Script.View.Settings import FilePathsSettingsFrame
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -6,11 +6,11 @@ from tkinter import filedialog
 
 #設定ウィンドウを作成
 class SettingsView(tk.Toplevel):
-    def __init__(self, controller=None, settings=None):
+    def __init__(self, controller=None):
         super().__init__()
-        self.geometry('300x450')
+        self.geometry('800x600')
         self.title('設定')
-        self.resizable(False, False)
+        self.resizable(True, True)
         self.protocol('WM_DELETE_WINDOW', self.close)
         self.controller = controller
 
@@ -21,36 +21,22 @@ class SettingsView(tk.Toplevel):
         tk.Label(self.urlFrame, text='あなたのtwitch配信URL').pack(anchor=tk.W)
         #テキストボックスを作成
         self.liveUrlEntry = ttk.Entry(self.urlFrame, width=30)
-        self.liveUrlEntry.pack(fill=tk.X, side=tk.TOP)
+        self.liveUrlEntry.pack(expand=False, fill=tk.X, side=tk.TOP)
 
         #仕切り線
-        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=10)
+        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=0)
 
-        #コメント取得時の効果音用Frameを作成
-        self.commentSoundPathFrame = PathSettingFrame.PathSettingFrame(self, 'commentSoundPath', 'コメント取得時の効果音(mp3)')
-        self.commentSoundPathFrame.pack(side=tk.TOP, fill=tk.X)
-
-        #コメント取得時の演出用Frameを作成
-        self.commentMoviePathFrame = PathSettingFrame.PathSettingFrame(self, 'commentMoviePath', 'コメント取得時の演出(mp4)')
-        self.commentMoviePathFrame.pack(side=tk.TOP, fill=tk.X)
+        #ファイルパス設定用Frameを作成
+        self.filePathsSettingsFrame = FilePathsSettingsFrame.FilePathsSettingsFrame(self.controller, self)
+        self.filePathsSettingsFrame.pack(expand=True, fill=tk.BOTH, side=tk.TOP, padx=10, pady=10)
 
         #仕切り線
-        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=10)
+        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=0)
 
-        #フォロワー取得時の効果音用Frameを作成
-        self.followerSoundPathFrame = PathSettingFrame.PathSettingFrame(self,'followerSoundPath', 'フォロワー取得時の効果音(mp3)')
-        self.followerSoundPathFrame.pack(side=tk.TOP, fill=tk.X)
-
-        #フォロワー取得時の演出用Frameを作成
-        self.followerMoviePathFrame = PathSettingFrame.PathSettingFrame(self, 'followerMoviePath', 'フォロワー取得時の演出(mp4)')
-        self.followerMoviePathFrame.pack(side=tk.TOP, fill=tk.X)
-
-        #仕切り線
-        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=10)
 
         #ボタン用Frameを作成
         self.buttonFrame = ttk.Frame(self, padding=(10,10))
-        self.buttonFrame.pack(fill=tk.X, side=tk.TOP)
+        self.buttonFrame.pack(expand=False, fill=tk.BOTH, side=tk.TOP)
         #キャンセルボタンを作成
         self.cancelButton = ttk.Button(self.buttonFrame, text='キャンセル', command=self.on_click_cancel_button)
         self.cancelButton.pack(side=tk.LEFT)
@@ -59,11 +45,7 @@ class SettingsView(tk.Toplevel):
         self.saveButton.pack(side=tk.RIGHT)
 
         #settingsの値を設定
-        self.liveUrlEntry.insert(tk.END, settings['liveURL'])
-        self.commentSoundPathFrame.entry.insert(tk.END, settings['commentSoundPath'])
-        self.commentMoviePathFrame.entry.insert(tk.END, settings['commentMoviePath'])
-        self.followerSoundPathFrame.entry.insert(tk.END, settings['followerSoundPath'])
-        self.followerMoviePathFrame.entry.insert(tk.END, settings['followerMoviePath'])
+        self.liveUrlEntry.insert(tk.END, self.controller.get_liveURL())
 
     def close(self):
         self.destroy()
@@ -76,12 +58,14 @@ class SettingsView(tk.Toplevel):
     def on_click_save_button(self):
         self.controller.on_click_save_button()
 
-    #参照ボタンを押したときのイベント
-    def on_click_reference_button(self, type):
-        self.controller.on_click_reference_button(type)
+    #scrollregionを設定
+    def set_scrollregion(self):
+        self.filePathsSettingsFrame.set_scrollregion()
 
     #ファイル選択ダイアログを表示
     def show_file_dialog(self, type, fileTypes):
+        print("ファイル選択ダイアログを表示を改修する")
+        return
         if fileTypes == []: return
         #初期ディレクトリを指定
         dir = 'C:\\'

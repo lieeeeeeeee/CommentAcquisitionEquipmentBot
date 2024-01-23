@@ -23,7 +23,7 @@ class MainView(tk.Tk):
         self.configure(bg='#90EE90')
 
         #メニューバーを作成
-        self.menuBar = MenuBar.MenuBar(self, self.menuBarContents)
+        self.menuBar = MenuBar.MenuBar(self.controller, self, self.menuBarContents)
         #メニューバーを表示
         self.menuBar.pack(side=tk.TOP, fill=tk.X, ipadx=5)
 
@@ -53,10 +53,6 @@ class MainView(tk.Tk):
     def on_input_ctrl_shortcut_key(self, event):
         print(event.keysym, event.state)
         self.controller.on_input_ctrl_shortcut_key(event.keysym, event.state)
-
-    #メニューバーのボタンを押したときのイベント
-    def on_click_menu_bar_button(self, button):
-        self.controller.on_click_menu_bar_button(button)
 
     #フルスクリーンの切り替え
     def toggle_fullscreen(self):

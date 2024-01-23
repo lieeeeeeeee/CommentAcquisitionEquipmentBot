@@ -16,7 +16,7 @@ class MainModel:
         "settings": {
             "name": "設定",
             "display": "Ctrl + `",
-            "keysym": "`",
+            "keysym": "grave",
             "state": 4
         },
         "exit": {

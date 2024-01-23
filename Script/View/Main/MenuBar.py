@@ -4,8 +4,9 @@ import tkinter as tk
 
 #ウィンドウのメニューバーを作成
 class MenuBar(tk.Frame):
-    def __init__(self, parent=None, menuBarContents=None):
+    def __init__(self, controller=None, parent=None, menuBarContents=None):
         super().__init__(parent)
+        self.controller = controller
         self.parent = parent
         self.menuBarContents = menuBarContents
         self.isVisible = True
@@ -33,7 +34,7 @@ class MenuBar(tk.Frame):
         tk.ttk.Separator(self, orient='vertical').pack(fill=tk.Y, side=tk.LEFT)
         for key in self.menuBarContents.keys():
             #ボタンを作成
-            button = MenuBarButton.MenuBarButton(self, text=key)
+            button = MenuBarButton.MenuBarButton(self.controller, self, text=key)
             #ボタンを表示
             button.pack(side=tk.LEFT)
 
@@ -47,7 +48,3 @@ class MenuBar(tk.Frame):
         #ショートカットキーラベルの色を設定
         shortcutKeyLabel.configure(bg='#ffffff')
         shortcutKeyLabel.pack(side=tk.RIGHT, padx=10)
-
-    #メニューバーのボタンを押したときのイベント
-    def on_click_menu_bar_button(self, button):
-        self.parent.on_click_menu_bar_button(button)

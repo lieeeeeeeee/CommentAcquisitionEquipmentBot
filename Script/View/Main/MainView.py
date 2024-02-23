@@ -1,7 +1,9 @@
 from Script.View.Main import MenuBar
 from Script.View.Main import Menu
+from Script.View.Main import MovieFrame
 import tkinter as tk
 from tkinter import messagebox
+import pygame
 
 #メインウィンドウを作成
 class MainView(tk.Tk):
@@ -101,3 +103,22 @@ class MainView(tk.Tk):
     def show_error_message(self, message):
         #エラーメッセージを表示
         messagebox.showerror('エラー', message)
+
+    #サウンドを再生
+    def play_sound(self, soundPath):
+        path = soundPath[0]
+        value = soundPath[1]
+        try:
+            pygame.mixer.init()
+            pygame.mixer.music.set_volume(value/100)
+            pygame.mixer.music.load(path)
+            pygame.mixer.music.play(1)
+        except:
+            print("Error")
+
+    #動画を再生
+    def play_movie(self, moviePath):
+        movie = MovieFrame.MovieFrame(self, moviePath)
+        movie.pack(expand=True, fill=tk.BOTH)
+        movie.play()
+

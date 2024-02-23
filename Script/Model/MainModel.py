@@ -1,3 +1,5 @@
+import random
+
 #メインウィンドウのモデル
 class MainModel:
     shortcut_keys = {
@@ -41,3 +43,25 @@ class MainModel:
 
     def __init__(self):
         pass
+
+    #FilePathsからランダムにSoundDataPathを取得
+    def get_random_Path(self, filePaths):
+        probability = 0.0
+        #0.0~100.0の範囲で乱数を生成
+        randomValue = random.uniform(0.0, 100.0)
+        print(f"randomValue: {randomValue}")
+        #filePathsをループ
+        for filePath in filePaths:
+            n = probability + filePath['probability']
+            #nが100.0を超えたとき
+            if n > 100.0: continue
+            #nがrandomValueを超えたとき
+            if n > randomValue:
+                #pathを返す
+                return (filePath['path'], filePath['volume'])
+            #probabilityにfilePath['probability']を加算
+            probability = n
+
+        #filePathsが空のときNoneを返す
+        return None
+        

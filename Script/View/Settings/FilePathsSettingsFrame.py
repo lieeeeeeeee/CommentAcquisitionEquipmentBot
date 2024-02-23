@@ -4,7 +4,7 @@ from tkinter import ttk
 
 class FilePathsSettingsFrame(ttk.Frame):
     def __init__(self, controller=None, parent=None):
-        super().__init__(parent, padding=(10,0))
+        super().__init__(parent, padding=(0,0))
 
         self.controller = controller
         self.parent = parent
@@ -32,7 +32,6 @@ class FilePathsSettingsFrame(ttk.Frame):
         #スクロールフレームを表示
         self.scrollCanvas.create_window((0,0), window=self.scrollFrame, anchor=tk.NW)
 
-
     #filePathsSettingFrameを設置
     def set_file_paths_setting_frame(self):
         filePaths = self.controller.get_filePaths()
@@ -40,7 +39,6 @@ class FilePathsSettingsFrame(ttk.Frame):
         for key in filePaths:
             filePathsSettingFrame = FilePathsSettingFrame.FilePathsSettingFrame(
                 self.controller, 
-                # self.scrollFrame, 
                 self,
                 key, 
                 self.get_file_path_setting_frame_title(key),
@@ -55,6 +53,6 @@ class FilePathsSettingsFrame(ttk.Frame):
     
     #scrollregionを現在のscrollCanvasの2倍に設定
     def set_scrollregion(self):
-        print('set_scrollregion')
+        print('set_scrollregionは未実装')
         return
         # self.scrollCanvas.configure(scrollregion=self.scrollCanvas.bbox('all'))

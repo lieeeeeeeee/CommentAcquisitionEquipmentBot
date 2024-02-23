@@ -121,7 +121,7 @@ class MainController:
             #スレッドを作成
             runThread = threading.Thread(target=self.bot.run, daemon=True) 
             #スレッドを起動
-            runThread.start()            
+            runThread.start()           
         except Exception as e:
             self.show_error_message(f"エラーが発生しました: {e}")
             #ボットを削除
@@ -138,9 +138,15 @@ class MainController:
         #ループを作成
         loop = asyncio.get_event_loop()
         #ボットを停止
-        loop.run_until_complete(self.bot.stop())
-        #ループを停止
-        loop.close()
+        try:
+            loop.run_until_complete(self.bot.stop())
+        except Exception as e:
+            self.show_error_message(f"エラーが発生しました: {e}")
+        finally:
+            #ループを停止
+            if not loop.is_closed():
+                loop.close()
+
         
         #ボットを削除
         del self.bot
@@ -149,7 +155,31 @@ class MainController:
     def on_receive_message(self, message):
         #コメントを表示
         print(f"{message.author.name}: {message.content}")
+        #CommentSoundFilePathsを取得
+        CommentSoundFilePaths = self.settingsController.model.get_CommentSoundFilePaths()
+        #CommentMovieFilePathsを取得
+        CommentMovieFilePaths = self.settingsController.model.get_CommentMovieFilePaths()
+
+        #CommentSoundFilePathsが空でないとき
+        if CommentSoundFilePaths != None:
+            #CommentSoundFilePathsからランダムに取得
+            soundData = self.model.get_random_Path(CommentSoundFilePaths)
+            #soundDataが空でないとき
+            if soundData != None:
+                #soundを再生
+                self.view.play_sound(soundData)
+
+        #CommentMovieFilePathsが空でないとき
+        if CommentMovieFilePaths != None:
+            #CommentMovieFilePathsからランダムに取得
+            movieData = self.model.get_random_Path(CommentMovieFilePaths)
+            #movieDataが空でないとき
+            if movieData != None:
+                moviePath = movieData[0]
+                #movieを再生
+                self.view.play_movie(moviePath)
 
     #エラーメッセージを表示
     def show_error_message(self, message):
         self.view.show_error_message(message)
+

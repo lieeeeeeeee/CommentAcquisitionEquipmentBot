@@ -14,10 +14,11 @@ class FilePathsSettingFrame(ttk.Frame):
         self.title = title
         self.pathsData = pathsData
         self.paths = []
-        self.maxPathsCount = 3
+        self.maxPathsCount = 6
 
         self.set_title_frame()
         self.set_paths_frame()
+        self.set_path_frame()
 
         self.columnconfigure(0, weight=1)
 
@@ -32,7 +33,7 @@ class FilePathsSettingFrame(ttk.Frame):
         #タイトルラベルを表示
         self.titleLabel.pack(expand=True, fill=tk.X, side=tk.LEFT)
         #addtivePathFrameButtonを作成
-        self.addtivePathFrameButton = tk.Button(titleFrame, text='追加', command=self.on_click_addtive_path_frame_button)
+        self.addtivePathFrameButton = tk.Button(titleFrame, text='+', command=self.on_click_addtive_path_frame_button)
         #addtivePathFrameButtonを右に寄せる
         self.addtivePathFrameButton.pack(side=tk.RIGHT)
         #タイトルのフレームを表示
@@ -58,15 +59,21 @@ class FilePathsSettingFrame(ttk.Frame):
         #pathsDataの数だけpathFrameを作成
         for index, dict in enumerate(self.pathsData):
             self.add_path_frame(index)
+            pathFrame = self.paths[index]
             #pathFrameのpathEntryTextを設定
-            self.paths[index].pathEntryText.set(dict['path'])
+            pathFrame.pathEntryText.set(dict['path'])
             #pathFrameのpobabilityEntryTextを設定
-            self.paths[index].probabilityEntryText.set(dict['probability'])
+            pathFrame.probabilityEntryText.set(dict['probability'])
+
+            #pathFrameのisMovieがFalseの場合
+            if pathFrame.isMovie == False:
+                #pathFrameのvolumeScaleを設定
+                pathFrame.volumeScale.set(dict['volume'])
          
     #pathFrameを追加
     def add_path_frame(self, index):
         #pathFrameを作成
-        pathFrame = FilePathFrame.FilePathFrame(self.pathsFrame, self, self.key, index)
+        pathFrame = FilePathFrame.FilePathFrame(self.controller, self, self.pathsFrame, self.key, index)
         #pathFrameを表示
         pathFrame.pack(expand=True, fill=tk.X, side=tk.TOP)
         #pathFrameをpathsに追加

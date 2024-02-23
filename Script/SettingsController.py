@@ -58,41 +58,60 @@ class SettingsController:
 
   #保存ボタンを押したときのイベント
   def on_click_save_button(self):
-    print("保存ボタンを押したときのイベントを改修する")
-    return
-    #設定を取得
-    self.settings['liveURL'] = self.view.liveUrlEntry.get()
-    self.settings['commentMoviePath'] = {
-      "path": self.view.commentMoviePathFrame.pathEntry.get(),
-      "probability": self.view.commentMoviePathFrame.probabilityEntry.get()
-    }
-    self.settings['commentSoundPath'] = {
-      "path": self.view.commentSoundPathFrame.pathEntry.get(),
-      "probability": self.view.commentSoundPathFrame.probabilityEntry.get()
-    }
-    self.settings['followerMoviePath'] = {
-      "path": self.view.followerMoviePathFrame.pathEntry.get(),
-      "probability": self.view.followerMoviePathFrame.probabilityEntry.get()
-    }
-    self.settings['followerSoundPath'] = {
-      "path": self.view.followerSoundPathFrame.pathEntry.get(),
-      "probability": self.view.followerSoundPathFrame.probabilityEntry.get()
-    }
+    #settingsの初期化
+    self.model.initialize_settings()
 
-    #設定を書き込む
-    self.model.save_settingsFile(self.settings)
+    #liveURLを保存する
+    liveURL = self.view.get_liveURL()
+    self.model.save_liveURL(liveURL)
+
+    #filePathSettingFrameの値を保存する
+    filePathsSettingFrames = self.view.filePathsSettingsFrame.filePathsSettingFrames
+    for filePathsSettingFrame in filePathsSettingFrames:
+      try :
+        self.save_filePath(filePathsSettingFrame)
+      except:
+        return
+
+    #settingsを保存する
+    self.model.store_settingsFile()
+
     #設定ウィンドウを閉じる
     self.close()
 
   #reference_buttonを押したときのイベント
-  def on_click_reference_button(self, key, index):
-    print("reference_buttonを押したときのイベントを改修する")
-    return
+  def on_click_reference_button(self, pathFrame, key):
     #フォルダ選択ダイアログを表示
-    fileType = self.model.get_file_type(type)
-    self.view.show_file_dialog(type, fileType)
+    fileTypes = self.get_file_type(key)
+    self.view.show_file_dialog(pathFrame, fileTypes)
 
   #addtivePathFrameButtonを押したときのイベント
   def on_click_addtive_path_frame_button(self):
     self.view.set_scrollregion()
 
+  #fileTypesを取得
+  def get_file_type(self, key):
+    return self.model.get_file_type(key)
+  
+  #FilePathを保存する
+  def save_filePath(self, filePathsSettingFrame):
+    #keyを取得
+    key = filePathsSettingFrame.key
+    #pathsを取得
+    pathFrames = filePathsSettingFrame.paths
+
+    for pathFrame in pathFrames:
+      #pathFrameのエラーチェック
+      if pathFrame.is_Error(): 
+        #エラーを発生させる
+        raise Exception('NullErrorが発生しました')
+      #pathを取得
+      path = pathFrame.get_path()
+      #probabilityを取得
+      probability = pathFrame.get_probability()
+      #volumeを取得
+      volume = pathFrame.get_volume()
+      #filePathを保存する
+      self.model.save_filePath(key, path, probability, volume)
+
+    print(f"settings: {self.model.settings}")

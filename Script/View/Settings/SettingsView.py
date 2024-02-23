@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 
-
 #設定ウィンドウを作成
 class SettingsView(tk.Toplevel):
     def __init__(self, controller=None):
@@ -23,26 +22,26 @@ class SettingsView(tk.Toplevel):
         self.liveUrlEntry = ttk.Entry(self.urlFrame, width=30)
         self.liveUrlEntry.pack(expand=False, fill=tk.X, side=tk.TOP)
 
-        #仕切り線
-        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=0)
-
-        #ファイルパス設定用Frameを作成
-        self.filePathsSettingsFrame = FilePathsSettingsFrame.FilePathsSettingsFrame(self.controller, self)
-        self.filePathsSettingsFrame.pack(expand=True, fill=tk.BOTH, side=tk.TOP, padx=10, pady=10)
-
-        #仕切り線
-        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=0)
-
-
         #ボタン用Frameを作成
         self.buttonFrame = ttk.Frame(self, padding=(10,10))
-        self.buttonFrame.pack(expand=False, fill=tk.BOTH, side=tk.TOP)
+        self.buttonFrame.pack(expand=False, fill=tk.BOTH, side=tk.BOTTOM)
         #キャンセルボタンを作成
         self.cancelButton = ttk.Button(self.buttonFrame, text='キャンセル', command=self.on_click_cancel_button)
         self.cancelButton.pack(side=tk.LEFT)
         #保存ボタンを作成
         self.saveButton = ttk.Button(self.buttonFrame, text='保存', command=self.on_click_save_button)
         self.saveButton.pack(side=tk.RIGHT)
+
+        #仕切り線
+        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.BOTTOM, padx=10, pady=0)
+        
+
+        #仕切り線
+        ttk.Separator(self, orient='horizontal').pack(fill=tk.X, side=tk.TOP, padx=10, pady=0)
+
+        #ファイルパス設定用Frameを作成
+        self.filePathsSettingsFrame = FilePathsSettingsFrame.FilePathsSettingsFrame(self.controller, self)
+        self.filePathsSettingsFrame.pack(expand=True, fill=tk.BOTH, side=tk.TOP, padx=10, pady=10)
 
         #settingsの値を設定
         self.liveUrlEntry.insert(tk.END, self.controller.get_liveURL())
@@ -62,31 +61,23 @@ class SettingsView(tk.Toplevel):
     def set_scrollregion(self):
         self.filePathsSettingsFrame.set_scrollregion()
 
+    #liveURLを取得
+    def get_liveURL(self):
+        return self.liveUrlEntry.get()
+
     #ファイル選択ダイアログを表示
-    def show_file_dialog(self, type, fileTypes):
-        print("ファイル選択ダイアログを表示を改修する")
-        return
-        if fileTypes == []: return
+    def show_file_dialog(self, pathFrame, fileTypes):
+        # if fileTypes == []: return
         #初期ディレクトリを指定
         dir = 'C:\\'
         #ファイル選択ダイアログを表示
         path = filedialog.askopenfilename(filetypes=fileTypes, initialdir=dir)
 
-        if path:
-            if type == 'commentSoundPath':
-                self.commentSoundPathFrame.entry.insert(tk.END, path)
-            elif type == 'commentMoviePath':
-                self.commentMoviePathFrame.entry.delete(0, tk.END)
-                self.commentMoviePathFrame.entry.insert(tk.END, path)
-            elif type == 'followerSoundPath':
-                self.followerSoundPathFrame.entry.delete(0, tk.END)
-                self.followerSoundPathFrame.entry.insert(tk.END, path)
-            elif type == 'followerMoviePath':
-                self.followerMoviePathFrame.entry.delete(0, tk.END)
-                self.followerMoviePathFrame.entry.insert(tk.END, path)
-            else:
-                return
+        #pathが空の場合は処理を終了
+        if path == '': return
+
+        #pathを設定
+        pathFrame.pathEntryText.set(path)
 
         #SettingsViewを最前面に表示
         self.lift()
-        self.attributes('-topmost', True)

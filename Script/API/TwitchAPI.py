@@ -1,7 +1,5 @@
 from twitchio import Channel, Message
 from twitchio.ext import commands
-import asyncio
-
 
 class Bot(commands.Bot):
     WTITCH_ACCESS_TOKEN = "***"
@@ -17,11 +15,12 @@ class Bot(commands.Bot):
 
     #チャンネルにログイン
     def run(self):
+        print("ログイン中...")
         super().run()
 
     #チャンネルからログアウト
-    def stop(self):
-        super().close()
+    async def stop(self):
+        await super().close()
 
 
 

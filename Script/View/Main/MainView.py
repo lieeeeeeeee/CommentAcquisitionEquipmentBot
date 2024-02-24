@@ -20,6 +20,7 @@ class MainView(tk.Tk):
         self.protocol('WM_DELETE_WINDOW', self.close)
         self.controller = controller
         self.temporaryFrame = None
+        self.isPlaingMovie = False
 
         #背景色(黄緑)を指定
         self.configure(bg='#90EE90')
@@ -118,7 +119,11 @@ class MainView(tk.Tk):
 
     #動画を再生
     def play_movie(self, moviePath):
-        movie = MovieFrame.MovieFrame(self, moviePath)
-        movie.pack(expand=True, fill=tk.BOTH)
-        movie.play()
+        #動画を再生中出ないとき
+        if not self.isPlaingMovie:
+            #動画を再生中にする
+            self.isPlaingMovie = True
+            movie = MovieFrame.MovieFrame(self, moviePath)
+            movie.pack(expand=True, fill=tk.BOTH)
+            movie.play()
 

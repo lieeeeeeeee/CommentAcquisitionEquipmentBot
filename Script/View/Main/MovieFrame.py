@@ -11,6 +11,7 @@ class MovieFrame(ttk.Frame):
     def __init__(self,parent=None, path=None):
         super().__init__(parent, padding=(0,0))
         self.lock = th.Lock()
+        self.parent = parent
         self.path = path
         self.video = cv2.VideoCapture(self.path)
         self.video_thread = None
@@ -75,4 +76,5 @@ class MovieFrame(ttk.Frame):
     def close(self):
         self.playing = False
         self.video.release()
+        self.parent.isPlaingMovie = False
         self.destroy()

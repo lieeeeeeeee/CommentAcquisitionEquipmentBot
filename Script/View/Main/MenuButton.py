@@ -1,5 +1,4 @@
 import tkinter as tk
-import asyncio
 
 #メニューのボタンを作成
 class MenuButton(tk.Button):

@@ -105,6 +105,11 @@ class MainView(tk.Tk):
         #エラーメッセージを表示
         messagebox.showerror('エラー', message)
 
+    #ノーマルメッセージを表示
+    def show_normal_message(self, message):
+        #ノーマルメッセージを表示
+        messagebox.showinfo('info', message)
+
     #サウンドを再生
     def play_sound(self, soundPath):
         path = soundPath[0]

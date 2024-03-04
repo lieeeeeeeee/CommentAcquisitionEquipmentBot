@@ -1,6 +1,7 @@
 from Script.Model import MainModel
 from Script.View.Main import MainView
 from Script.API import TwitchAPI
+from Script.API import YoutubeAPI
 from Script import SettingsController
 import threading
 import asyncio
@@ -102,10 +103,16 @@ class MainController:
 
     #チャンネルに参加
     def join_channel(self):
-        #チャンネル名を取得
-        channelName = self.settingsController.model.get_accountID()
+        #liveDataを取得
+        liveData = self.settingsController.get_liveData()
+
+        liveAccountID = liveData[0]
+
+        liveMedium = liveData[1]
+
+
         #チャンネル名が空のとき
-        if channelName == "":
+        if liveAccountID == "":
             self.show_error_message("チャンネル名が設定されていません")
             return
 
@@ -115,13 +122,23 @@ class MainController:
             return
 
         #ボットを作成
-        self.bot = TwitchAPI.Bot(self, channelName)
+        self.bot = None
+
+        if liveMedium == "Twitch":
+            self.bot = TwitchAPI.Bot(self, liveAccountID)
+        elif liveMedium == "Youtube":
+            self.bot = YoutubeAPI.Bot(self, liveAccountID)
+        else:
+            self.show_error_message("配信サービスが選択されていません")
+            return
+        
         try:
             #ボットを起動
             #スレッドを作成
             runThread = threading.Thread(target=self.bot.run, daemon=True) 
             #スレッドを起動
-            runThread.start()           
+            runThread.start()  
+            self.view.show_normal_message("接続しました")         
         except Exception as e:
             self.show_error_message(f"エラーが発生しました: {e}")
             #ボットを削除
@@ -141,20 +158,19 @@ class MainController:
         try:
             loop.run_until_complete(self.bot.stop())
         except Exception as e:
-            self.show_error_message(f"エラーが発生しました: {e}")
+            print(f"エラーが発生しました: {e}")
         finally:
             #ループを停止
             if not loop.is_closed():
                 loop.close()
-
+        #メッセージを表示
+        self.view.show_normal_message("切断しました")
         
         #ボットを削除
         del self.bot
 
     #コメントを受信時のイベント
     def on_receive_message(self, message):
-        #コメントを表示
-        print(f"{message.author.name}: {message.content}")
         #CommentSoundFilePathsを取得
         CommentSoundFilePaths = self.settingsController.model.get_CommentSoundFilePaths()
         #CommentMovieFilePathsを取得

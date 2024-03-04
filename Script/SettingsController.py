@@ -36,8 +36,8 @@ class SettingsController:
   def get_settings(self):
     return self.model.settings
   #accountIDを取得
-  def get_accountID(self):
-    return self.model.get_accountID()
+  def get_liveData(self):
+    return self.model.get_liveData()
   #liveURLを取得
   def get_liveURL(self):
     return self.model.get_liveURL()

@@ -189,8 +189,9 @@ class SettingsModel:
             print(f"エラーが発生しました: {e}")
             return False
 
+
     #liveURLからaccountIDを取得する
-    def get_accountID(self):
+    def get_liveData(self):
         #settings.jsonをロードする
         settings = self.load_settingsFile()
         #liveURLを取得する
@@ -201,7 +202,17 @@ class SettingsModel:
         #liveURLが空でないとき
         else:
             #liveURLからaccountIDを取得する
-            return liveURL.split('/')[-1]
+            # もしliveURLにyoutube.comが含まれていたら
+            accountID = ""
+            medium = ""
+            if "youtube.com" in liveURL:
+                accountID = liveURL.replace("https://www.youtube.com/watch?v=", "")
+                medium = "Youtube"
+            # もしliveURLにtwitch.tvが含まれていたら
+            elif "twitch.tv" in liveURL:
+                accountID = liveURL.split('/')[-1]
+                medium = "Twitch"
+            return (accountID, medium)
     
     #liveURLを取得する
     def get_liveURL(self):

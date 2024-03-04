@@ -17,7 +17,7 @@ class SettingsView(tk.Toplevel):
         self.urlFrame = ttk.Frame(self, padding=(10,10))
         self.urlFrame.pack(fill=tk.X, side=tk.TOP)
         #ラベルを作成
-        tk.Label(self.urlFrame, text='あなたのtwitch配信URL').pack(anchor=tk.W)
+        tk.Label(self.urlFrame, text='あなたのtwitch配信URL または Youtube配信URL').pack(anchor=tk.W)
         #テキストボックスを作成
         self.liveUrlEntry = ttk.Entry(self.urlFrame, width=30)
         self.liveUrlEntry.pack(expand=False, fill=tk.X, side=tk.TOP)
